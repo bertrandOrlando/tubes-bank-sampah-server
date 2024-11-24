@@ -15,6 +15,7 @@ import cookieParser from "cookie-parser";
 import { CORS_URL } from "./config/appConfig.js";
 
 // Routes import
+import userRoute from "./routes/user.js";
 import kecamatanRoute from "./routes/kecamatan.js";
 
 const app = express();
@@ -37,6 +38,7 @@ app.use(cors(corsConfig));
 app.use(morgan("dev"));
 
 // Routes
+app.use("/api", userRoute);
 app.use("/api/kecamatan", kecamatanRoute);
 
 //Error handling

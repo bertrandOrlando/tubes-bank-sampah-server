@@ -1,5 +1,5 @@
 import pkg from "pg";
-import { DB_CONFIG } from "../config/appConfig";
+import { DB_CONFIG } from "../config/appConfig.js";
 const { Pool } = pkg;
 
 const pool = new Pool({

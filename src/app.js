@@ -18,6 +18,7 @@ import { CORS_URL } from "./config/appConfig.js";
 import userRoute from "./routes/user.js";
 import kecamatanRoute from "./routes/kecamatan.js";
 import kelurahanRoute from "./routes/kelurahan.js";
+import sukRoute from "./routes/suk.js";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(morgan("dev"));
 app.use("/api", userRoute);
 app.use("/api/kecamatan", kecamatanRoute);
 app.use("/api/kelurahan", kelurahanRoute);
+app.use("/api/SUK", sukRoute);
 
 //Error handling
 app.use(errorHandler);

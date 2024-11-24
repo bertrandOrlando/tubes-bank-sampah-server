@@ -3,6 +3,7 @@ import { UnauthorizedError } from "../errors/UnauthorizedError.js";
 import bcrypt from "bcryptjs";
 import pool from "../database/database.js";
 import jwt from "jsonwebtoken";
+import { JWT_SECRET, JWT_LIFETIME } from "../config/appConfig.js";
 
 export const register = async (req, res) => {
   const { password, no_telp, alamat, email, kel_id, nama } = req.body;
@@ -46,9 +47,9 @@ export const login = async (req, res) => {
 
   const token = jwt.sign(
     { pengguna_id: user.pengguna_id, role: user.role },
-    process.env.JWT_SECRET,
+    JWT_SECRET,
     {
-      expiresIn: process.env.JWT_LIFETIME,
+      expiresIn: JWT_LIFETIME,
     }
   );
 

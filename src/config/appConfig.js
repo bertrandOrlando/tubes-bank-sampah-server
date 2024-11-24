@@ -16,3 +16,6 @@ export const DB_CONFIG = {
 };
 
 export const CORS_URL = process.env.CORS_URL;
+
+export const JWT_SECRET = process.env.JWT_SECRET;
+export const JWT_LIFETIME = process.env.JWT_LIFETIME;

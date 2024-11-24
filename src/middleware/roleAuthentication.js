@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { BadRequestError } from "../errors/BadRequestError.js";
 import { UnauthorizedError } from "../errors/UnauthorizedError.js";
 import { ForbiddenError } from "../errors/ForbiddenError.js";
-
+import { JWT_SECRET } from "../config/appConfig.js";
 export const authMiddleware = (authRole) => {
   return async (req, res, next) => {
     if (authRole !== "pengguna" && authRole !== "admin") {
@@ -22,7 +22,7 @@ export const authMiddleware = (authRole) => {
     }
 
     try {
-      const payload = jwt.verify(token, process.env.JWT_SECRET);
+      const payload = jwt.verify(token, JWT_SECRET);
 
       if (payload.role !== authRole) {
         next(new ForbiddenError("You don't have permission"));

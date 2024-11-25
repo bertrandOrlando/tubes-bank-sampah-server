@@ -5,7 +5,7 @@ import { ForbiddenError } from "../errors/ForbiddenError.js";
 import { JWT_SECRET } from "../config/appConfig.js";
 export const authMiddleware = (authRole) => {
   return async (req, res, next) => {
-    if (authRole !== "pengguna" && authRole !== "admin") {
+    if (authRole !== "pengguna" && authRole !== "admin" && authRole !== "all") {
       return next(new Error("Invalid role"));
     }
 
@@ -24,7 +24,7 @@ export const authMiddleware = (authRole) => {
     try {
       const payload = jwt.verify(token, JWT_SECRET);
 
-      if (payload.role !== authRole) {
+      if (payload.role !== authRole && authRole !== "all") {
         next(new ForbiddenError("You don't have permission"));
       }
 

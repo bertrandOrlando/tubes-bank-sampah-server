@@ -20,7 +20,7 @@ import kecamatanRoute from "./routes/kecamatan.js";
 import kelurahanRoute from "./routes/kelurahan.js";
 import sukRoute from "./routes/suk.js";
 import sampahRoute from "./routes/sampah.js";
-
+import transaksiRoute from "./routes/transaksi.js";
 
 const app = express();
 
@@ -47,7 +47,7 @@ app.use("/api/kecamatan", kecamatanRoute);
 app.use("/api/kelurahan", kelurahanRoute);
 app.use("/api/SUK", sukRoute);
 app.use("/api/sampah", sampahRoute);
-
+app.use("/api/transaksi", transaksiRoute);
 
 //Error handling
 app.use(errorHandler);

@@ -30,7 +30,7 @@ export const login = async (req, res) => {
     throw new BadRequestError("All specified field must be included");
   }
 
-  const textQuery = `SELECT pengguna_id, password, email, role FROM Pengguna WHERE email = $1`;
+  const textQuery = `SELECT pengguna_id, password, email, nama, role FROM Pengguna WHERE email = $1`;
 
   const queryResult = await pool.query(textQuery, [email]);
 
@@ -46,7 +46,7 @@ export const login = async (req, res) => {
   }
 
   const token = jwt.sign(
-    { pengguna_id: user.pengguna_id, role: user.role },
+    { pengguna_id: user.pengguna_id, nama: user.nama, role: user.role },
     JWT_SECRET,
     {
       expiresIn: JWT_LIFETIME,

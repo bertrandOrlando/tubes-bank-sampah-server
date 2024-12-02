@@ -24,6 +24,9 @@ import transaksiRoute from "./routes/transaksi.js";
 
 const app = express();
 
+// Serve static from public folder
+app.use(express.static("public"));
+
 // Cookie parse
 app.use(cookieParser());
 

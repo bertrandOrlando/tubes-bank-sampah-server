@@ -6,7 +6,7 @@ export const getPenggunaTransaksi = async (req, res) => {
   const { penggunaId } = req.user;
   const { start, end } = req.query;
 
-  let textQuery = `SELECT * FROM Transaksi t INNER JOIN Transaksi_Sampah ts ON t.transaksi_id = ts.transaksi_sampah_id INNER JOIN Sampah s ON ts.sampah_id = s.sampah_id INNER JOIN SUK ON s.suk_id = SUK.suk_id WHERE t.tipe_transaksi = 'masuk' AND `;
+  let textQuery = `SELECT * FROM Transaksi t INNER JOIN Transaksi_Sampah ts ON t.transaksi_id = ts.transaksi_sampah_id INNER JOIN Sampah s ON ts.sampah_id = s.sampah_id INNER JOIN SUK ON s.suk_id = SUK.suk_id INNER JOIN Pengguna p ON t.pengguna_id = p.pengguna_id WHERE t.tipe_transaksi = 'masuk' AND `;
 
   let placeHolderCtr = 1;
   const whereClause = [`t.pengguna_id = $${placeHolderCtr++}`];
@@ -25,12 +25,19 @@ export const getPenggunaTransaksi = async (req, res) => {
   const whereClauseStr = whereClause.join(" AND ");
   textQuery += whereClauseStr;
 
-  console.log(textQuery);
+  textQuery += " ORDER BY t.tanggal DESC";
 
   const queryResult = await pool.query(textQuery, values);
 
   const groupedData = queryResult.rows.reduce((result, item) => {
-    const { transaksi_id, tanggal, pengguna_id, ...item_sampah } = item;
+    const {
+      transaksi_id,
+      tanggal,
+      pengguna_id,
+      tipe_transaksi,
+      email,
+      ...item_sampah
+    } = item;
 
     let transaksi = result.find((t) => t.transaksi_id === transaksi_id);
     if (!transaksi) {
@@ -38,6 +45,8 @@ export const getPenggunaTransaksi = async (req, res) => {
         transaksi_id,
         tanggal,
         pengguna_id,
+        tipe_transaksi,
+        email,
         item_sampah: [],
       };
       result.push(transaksi);
@@ -55,7 +64,7 @@ export const getAllTransaksi = async (req, res) => {
   const { start, end, tipe_transaksi } = req.query;
   console.log(start, end, tipe_transaksi);
 
-  let textQuery = `SELECT * FROM Transaksi t INNER JOIN Transaksi_Sampah ts ON t.transaksi_id = ts.transaksi_sampah_id INNER JOIN Sampah s ON ts.sampah_id = s.sampah_id INNER JOIN SUK ON s.suk_id = SUK.suk_id`;
+  let textQuery = `SELECT * FROM Transaksi t INNER JOIN Transaksi_Sampah ts ON t.transaksi_id = ts.transaksi_sampah_id INNER JOIN Sampah s ON ts.sampah_id = s.sampah_id INNER JOIN SUK ON s.suk_id = SUK.suk_id INNER JOIN Pengguna p ON t.pengguna_id = p.pengguna_id ORDER BY t.tanggal DESC`;
 
   const values = [];
   const whereClause = [];
@@ -71,7 +80,6 @@ export const getAllTransaksi = async (req, res) => {
     values.push(`'${end}'`);
   }
 
-  console.log(tipe_transaksi);
   if (tipe_transaksi === "masuk" || tipe_transaksi === "keluar") {
     whereClause.push(`t.tipe_transaksi = $${placeHolderCtr++}`);
     values.push(`${tipe_transaksi}`);
@@ -86,7 +94,14 @@ export const getAllTransaksi = async (req, res) => {
   const queryResult = await pool.query(textQuery, values);
 
   const groupedData = queryResult.rows.reduce((result, item) => {
-    const { transaksi_id, tanggal, pengguna_id, ...item_sampah } = item;
+    const {
+      transaksi_id,
+      tanggal,
+      pengguna_id,
+      tipe_transaksi,
+      email,
+      ...item_sampah
+    } = item;
 
     let transaksi = result.find((t) => t.transaksi_id === transaksi_id);
     if (!transaksi) {
@@ -94,6 +109,8 @@ export const getAllTransaksi = async (req, res) => {
         transaksi_id,
         tanggal,
         pengguna_id,
+        tipe_transaksi,
+        email,
         item_sampah: [],
       };
       result.push(transaksi);
